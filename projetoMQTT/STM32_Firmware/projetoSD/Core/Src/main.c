@@ -20,6 +20,7 @@
 #include "main.h"
 #include <stdio.h>
 #include "string.h"
+#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -152,27 +153,21 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	    HAL_ADC_Start(&hadc1);
+	  //iniciando o ADC
+	  HAL_ADC_Start(&hadc1);
 
-	    // --- canal 0 ---
-	    //HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	    adc_ch0 = read_adc(ADC_CHANNEL_0);
-	    adc_ch1 = read_adc(ADC_CHANNEL_1);
+	  //leituras dos adcs
+	  adc_ch0 = read_adc(ADC_CHANNEL_0);
+	  adc_ch1 = read_adc(ADC_CHANNEL_1);
 
-	    // --- canal 1 ---
-	   // HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	   // adc_ch1 = HAL_ADC_GetValue(&hadc1);
+	  // Temperaturas
+	  temperature1 = read_temperature_ntc(adc_ch0);
+	  temperature2 = read_temperature_ntc(adc_ch1);
 
-//	    HAL_ADC_Stop(&hadc1);
+	  sprintf(msg, "T1: %.2f C  |  T2: %.2f C\r\n", temperature1, temperature2);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
 
-	    // Temperaturas
-	    temperature1 = read_temperature_ntc(adc_ch0);
-	    temperature2 = read_temperature_ntc(adc_ch1);
-
-	    sprintf(msg, "T1: %.2f C  |  T2: %.2f C\r\n", temperature1, temperature2);
-	    HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-
-	    HAL_Delay(200);
+	  HAL_Delay(200);
   }
   /* USER CODE END 3 */
 }
